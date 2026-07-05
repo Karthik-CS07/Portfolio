@@ -8,12 +8,10 @@ import {
   MapPin,
   Check,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import { toast, Toaster } from "sonner";
-
-import projectAi from "@/assets/project-ai-assistant.jpg";
-import projectEcom from "@/assets/project-ecommerce.jpg";
-import projectAnalytics from "@/assets/project-analytics.jpg";
+import { submitInquiry } from "@/lib/inquiry";
 
 export const Route = createFileRoute("/")({
   component: Portfolio,
@@ -41,7 +39,6 @@ const PROJECTS: {
   title: string;
   desc: string;
   tech: string[];
-  image: string;
   github?: string;
   demo?: string;
 }[] = [
@@ -49,49 +46,42 @@ const PROJECTS: {
     title: "RecruiterMatch AI",
     desc: "An AI-powered hiring assistant that matches candidate resumes to job descriptions using semantic similarity. It removes hours of manual screening by ranking the most relevant profiles for a role, with an explainable score for each match.",
     tech: ["Python", "Machine Learning", "React", "Node.js"],
-    image: projectAi,
     github: GITHUB,
   },
   {
     title: "AI Study Planner",
     desc: "A personalized study planner that turns a learner's goals, subjects, and available time into an adaptive weekly schedule. It helps students stay consistent by rebalancing tasks based on progress and upcoming deadlines.",
     tech: ["Python", "Machine Learning", "React"],
-    image: projectAnalytics,
     github: GITHUB,
   },
   {
     title: "OTT Platform UI",
     desc: "A responsive front-end for a streaming platform with browsing, category rows, and detail views. It focuses on a clean visual hierarchy and smooth interactions so users can discover content without friction across devices.",
     tech: ["React", "HTML", "CSS", "JavaScript"],
-    image: projectEcom,
     github: GITHUB,
   },
   {
     title: "Movie Genre Classification",
     desc: "A natural-language model that predicts a movie's genre from its plot summary. It solves the manual tagging problem for large catalogs by learning genre signals from text features and returning the top predicted labels.",
     tech: ["Python", "Machine Learning", "Data Science"],
-    image: projectAi,
     github: GITHUB,
   },
   {
     title: "Customer Churn Prediction",
     desc: "An end-to-end machine-learning pipeline that predicts which customers are likely to churn from behavioral and account data. Its key feature is the ranked list of churn drivers, giving teams a clear starting point for retention.",
     tech: ["Python", "Machine Learning", "SQL"],
-    image: projectAnalytics,
     github: GITHUB,
   },
   {
     title: "Credit Card Fraud Detection",
     desc: "A classification model that flags fraudulent card transactions in a highly imbalanced dataset. It is tuned for high recall on the fraud class so genuinely suspicious activity is caught while keeping false alarms manageable.",
     tech: ["Python", "Machine Learning", "Data Science"],
-    image: projectAi,
     github: GITHUB,
   },
   {
     title: "Personal Portfolio Website",
     desc: "This portfolio — a calm, editorial single-page site that showcases my work as an AI & Full Stack developer. It is fully responsive, keyboard-friendly, and built with a lightweight component setup for fast loads.",
     tech: ["React", "TypeScript", "HTML", "CSS"],
-    image: projectEcom,
     github: GITHUB,
   },
 ];
@@ -299,21 +289,11 @@ function Work() {
         {PROJECTS.map((p, i) => (
           <article
             key={p.title}
-            className={`grid gap-8 md:grid-cols-12 md:items-center ${
-              i % 2 === 1 ? "md:[&>figure]:order-2" : ""
+            className={`grid gap-8 md:grid-cols-2 md:items-start ${
+              i % 2 === 1 ? "md:[&>div:first-child]:order-2" : ""
             }`}
           >
-            <figure className="md:col-span-7 overflow-hidden rounded-2xl border border-border bg-card">
-              <img
-                src={p.image}
-                alt={p.title}
-                width={1024}
-                height={768}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.02]"
-              />
-            </figure>
-            <div className="md:col-span-5">
+            <div>
               <div className="font-mono text-xs tracking-widest text-muted-foreground">
                 Project
               </div>
@@ -321,7 +301,9 @@ function Work() {
                 {p.title}
               </h3>
               <p className="mt-4 leading-relaxed text-foreground/80">{p.desc}</p>
-              <ul className="mt-5 flex flex-wrap gap-2">
+            </div>
+            <div className={i % 2 === 1 ? "" : "md:text-right"}>
+              <ul className={`mt-3 flex flex-wrap gap-2 ${i % 2 === 1 ? "" : "md:justify-end"}`}>
                 {p.tech.map((t) => (
                   <li
                     key={t}
@@ -331,7 +313,7 @@ function Work() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-5 flex flex-wrap items-center gap-3">
+              <div className={`mt-5 flex flex-wrap items-center gap-3 ${i % 2 === 1 ? "" : "md:justify-end"}`}>
                 {p.github ? (
                   <a
                     href={p.github}
@@ -398,8 +380,9 @@ function Contact() {
 
 function Inquiry() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
@@ -408,35 +391,35 @@ function Inquiry() {
     const title = String(data.get("title") || "").trim();
     const desc = String(data.get("desc") || "").trim();
     const budget = String(data.get("budget") || "").trim();
+    const currency = String(data.get("currency") || "₹").trim();
     const deadline = String(data.get("deadline") || "").trim();
 
+    // Client-side validation (quick feedback)
     if (!name || name.length > 100) return toast.error("Please enter a valid name.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       return toast.error("Please enter a valid email address.");
     if (!title || title.length > 120) return toast.error("Please add a project title.");
     if (!desc || desc.length > 2000) return toast.error("Please describe the project.");
-    if (!budget) return toast.error("Please pick an expected budget.");
+    if (!budget) return toast.error("Please enter an expected budget.");
 
-    // Frontend-only handoff: open the user's email client addressed to Karthik.
-    const subject = `New project inquiry — ${title}`;
-    const body = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Budget: ${budget}`,
-      deadline ? `Deadline: ${deadline}` : null,
-      "",
-      "Project description:",
-      desc,
-    ]
-      .filter(Boolean)
-      .join("\n");
-    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(body)}`;
+    setSubmitting(true);
+    try {
+      const result = await submitInquiry({
+        data: { name, email, title, desc, budget, currency, deadline },
+      });
 
-    setSubmitted(true);
-    form.reset();
-    toast.success("Thanks — I'll be in touch soon.");
+      if (result.success) {
+        setSubmitted(true);
+        form.reset();
+        toast.success("Thanks — I'll be in touch soon.");
+      } else {
+        toast.error(result.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      toast.error("Network error. Please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -451,7 +434,7 @@ function Inquiry() {
           <span className="hand-divider" />
           <p className="text-sm text-muted-foreground">
             Prefer email? Write to{" "}
-            <a href={`mailto:${EMAIL}`} className="ink-underline text-foreground">
+            <a href={`mailto:${EMAIL}`} className="text-foreground underline decoration-primary/60 decoration-1 underline-offset-4 hover:decoration-primary">
               {EMAIL}
             </a>
             .
@@ -464,10 +447,10 @@ function Inquiry() {
               <span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground">
                 <Check className="h-4 w-4" />
               </span>
-              <h3 className="font-display text-2xl">Message ready to send.</h3>
+              <h3 className="font-display text-2xl">Inquiry sent successfully.</h3>
               <p className="text-foreground/80">
-                Your email client should have opened with the details filled in.
-                If not, please email me directly at {EMAIL}.
+                Your message has been received. I'll review it and get back to
+                you as soon as possible.
               </p>
               <button
                 onClick={() => setSubmitted(false)}
@@ -497,18 +480,23 @@ function Inquiry() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <Label>Expected budget</Label>
-                  <select
-                    name="budget"
-                    required
-                    defaultValue=""
-                    className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary"
-                  >
-                    <option value="" disabled>Select a range</option>
-                    <option>Under $500</option>
-                    <option>$500 – $2k</option>
-                    <option>$2k – $5k</option>
-                    <option>$5k+</option>
-                  </select>
+                  <div className="flex">
+                    <select
+                      name="currency"
+                      defaultValue="₹"
+                      className="shrink-0 rounded-l-lg border border-r-0 border-input bg-background px-2.5 py-2.5 text-sm outline-none transition-colors focus:border-primary"
+                    >
+                      <option value="₹">₹ INR</option>
+                      <option value="$">$ USD</option>
+                    </select>
+                    <input
+                      name="budget"
+                      type="text"
+                      required
+                      placeholder="e.g. 50000"
+                      className="w-full rounded-r-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary"
+                    />
+                  </div>
                 </div>
                 <Field label="Deadline (optional)" name="deadline" type="date" />
               </div>
@@ -518,10 +506,20 @@ function Inquiry() {
                 </p>
                 <button
                   type="submit"
-                  className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-transform hover:-translate-y-0.5"
+                  disabled={submitting}
+                  className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-transform hover:-translate-y-0.5 disabled:opacity-60 disabled:pointer-events-none"
                 >
-                  Send inquiry
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  {submitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Sending…
+                    </>
+                  ) : (
+                    <>
+                      Send inquiry
+                      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </>
+                  )}
                 </button>
               </div>
             </form>
