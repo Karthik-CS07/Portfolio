@@ -42,56 +42,57 @@ const PROJECTS: {
   desc: string;
   tech: string[];
   image: string;
-  link: string;
+  github?: string;
+  demo?: string;
 }[] = [
   {
     title: "RecruiterMatch AI",
-    desc: "An AI-powered platform that matches candidate resumes with job descriptions using semantic similarity, helping recruiters shortlist relevant profiles faster.",
+    desc: "An AI-powered hiring assistant that matches candidate resumes to job descriptions using semantic similarity. It removes hours of manual screening by ranking the most relevant profiles for a role, with an explainable score for each match.",
     tech: ["Python", "Machine Learning", "React", "Node.js"],
     image: projectAi,
-    link: GITHUB,
+    github: GITHUB,
   },
   {
     title: "AI Study Planner",
-    desc: "A personalized study planner that generates adaptive schedules from a learner's goals, subjects, and available time, powered by lightweight ML heuristics.",
+    desc: "A personalized study planner that turns a learner's goals, subjects, and available time into an adaptive weekly schedule. It helps students stay consistent by rebalancing tasks based on progress and upcoming deadlines.",
     tech: ["Python", "Machine Learning", "React"],
     image: projectAnalytics,
-    link: GITHUB,
+    github: GITHUB,
   },
   {
     title: "OTT Platform UI",
-    desc: "A responsive streaming-platform interface with browsing, categories, and detail views — focused on smooth interactions and clean visual hierarchy.",
+    desc: "A responsive front-end for a streaming platform with browsing, category rows, and detail views. It focuses on a clean visual hierarchy and smooth interactions so users can discover content without friction across devices.",
     tech: ["React", "HTML", "CSS", "JavaScript"],
     image: projectEcom,
-    link: GITHUB,
+    github: GITHUB,
   },
   {
     title: "Movie Genre Classification",
-    desc: "A text classification model that predicts a movie's genre from its plot summary using classical NLP features and supervised learning.",
+    desc: "A natural-language model that predicts a movie's genre from its plot summary. It solves the manual tagging problem for large catalogs by learning genre signals from text features and returning the top predicted labels.",
     tech: ["Python", "Machine Learning", "Data Science"],
     image: projectAi,
-    link: GITHUB,
+    github: GITHUB,
   },
   {
     title: "Customer Churn Prediction",
-    desc: "An end-to-end ML pipeline that predicts customer churn from behavioral and account data, with feature analysis to explain the key drivers.",
+    desc: "An end-to-end machine-learning pipeline that predicts which customers are likely to churn from behavioral and account data. Its key feature is the ranked list of churn drivers, giving teams a clear starting point for retention.",
     tech: ["Python", "Machine Learning", "SQL"],
     image: projectAnalytics,
-    link: GITHUB,
+    github: GITHUB,
   },
   {
     title: "Credit Card Fraud Detection",
-    desc: "An imbalanced-classification model that flags fraudulent transactions in real time, tuned for high recall on the minority fraud class.",
+    desc: "A classification model that flags fraudulent card transactions in a highly imbalanced dataset. It is tuned for high recall on the fraud class so genuinely suspicious activity is caught while keeping false alarms manageable.",
     tech: ["Python", "Machine Learning", "Data Science"],
     image: projectAi,
-    link: GITHUB,
+    github: GITHUB,
   },
   {
     title: "Personal Portfolio Website",
-    desc: "This portfolio — a calm, editorial single-page site built to showcase my work as an AI & Full Stack developer.",
+    desc: "This portfolio — a calm, editorial single-page site that showcases my work as an AI & Full Stack developer. It is fully responsive, keyboard-friendly, and built with a lightweight component setup for fast loads.",
     tech: ["React", "TypeScript", "HTML", "CSS"],
     image: projectEcom,
-    link: GITHUB,
+    github: GITHUB,
   },
 ];
 
