@@ -331,15 +331,30 @@ function Work() {
                   </li>
                 ))}
               </ul>
-              <a
-                href={p.link}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-5 inline-flex items-center gap-1.5 text-sm text-foreground underline decoration-primary decoration-2 underline-offset-4 hover:text-primary"
-              >
-                View on GitHub
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </a>
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                {p.github ? (
+                  <a
+                    href={p.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-foreground/80 bg-foreground px-4 py-1.5 text-sm font-medium text-background transition-transform hover:-translate-y-0.5"
+                  >
+                    <Github className="h-3.5 w-3.5" />
+                    GitHub
+                  </a>
+                ) : null}
+                {p.demo ? (
+                  <a
+                    href={p.demo}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-1.5 text-sm font-medium text-foreground transition-transform hover:-translate-y-0.5"
+                  >
+                    Live Demo
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
+                ) : null}
+              </div>
             </div>
           </article>
         ))}
