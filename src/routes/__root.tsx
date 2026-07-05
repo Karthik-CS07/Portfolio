@@ -77,17 +77,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Aarav Mehta — AI & Full Stack Developer" },
+      { title: "Karthik CS — AI & Full Stack Developer" },
       {
         name: "description",
         content:
-          "Freelance AI & full stack developer crafting thoughtful, production-grade web products. Available for select engagements.",
+          "Karthik CS — AI & Full Stack Developer building thoughtful, production-grade web and ML products.",
       },
-      { property: "og:title", content: "Aarav Mehta — AI & Full Stack Developer" },
+      { property: "og:title", content: "Karthik CS — AI & Full Stack Developer" },
       {
         property: "og:description",
         content:
-          "Freelance AI & full stack developer crafting thoughtful, production-grade web products.",
+          "AI & Full Stack Developer building thoughtful, production-grade web and ML products.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
