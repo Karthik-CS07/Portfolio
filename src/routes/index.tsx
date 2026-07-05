@@ -19,6 +19,10 @@ export const Route = createFileRoute("/")({
   component: Portfolio,
 });
 
+const EMAIL = "cskarthikcr7@gmail.com";
+const GITHUB = "https://github.com/Karthik-CS07";
+const LINKEDIN = "https://www.linkedin.com/in/karthik-cs-89b629327";
+
 const NAV = [
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
@@ -27,33 +31,67 @@ const NAV = [
 ];
 
 const SKILLS = [
-  { group: "AI & ML", items: ["LangChain", "OpenAI / Anthropic", "RAG pipelines", "Vector DBs", "PyTorch"] },
-  { group: "Frontend", items: ["React", "TypeScript", "Next.js", "Tailwind", "Framer Motion"] },
-  { group: "Backend", items: ["Node.js", "Python", "PostgreSQL", "tRPC", "Redis"] },
-  { group: "Infra", items: ["AWS", "Docker", "Vercel", "Supabase", "CI / CD"] },
+  { group: "Languages", items: ["Python", "Java", "JavaScript", "SQL"] },
+  { group: "Frontend", items: ["HTML", "CSS", "React"] },
+  { group: "Backend & Tools", items: ["Node.js", "Git & GitHub"] },
+  { group: "AI & Data", items: ["Machine Learning", "Data Science"] },
 ];
 
-const PROJECTS = [
+const PROJECTS: {
+  title: string;
+  desc: string;
+  tech: string[];
+  image: string;
+  link: string;
+}[] = [
   {
-    year: "2025",
-    title: "Lumen — AI research assistant",
-    desc: "A retrieval-augmented reading companion that summarizes long-form papers and threads citations back to source paragraphs.",
-    tech: ["Next.js", "LangChain", "pgvector", "OpenAI"],
+    title: "RecruiterMatch AI",
+    desc: "An AI-powered platform that matches candidate resumes with job descriptions using semantic similarity, helping recruiters shortlist relevant profiles faster.",
+    tech: ["Python", "Machine Learning", "React", "Node.js"],
     image: projectAi,
+    link: GITHUB,
   },
   {
-    year: "2024",
-    title: "Marché — headless commerce",
-    desc: "Custom storefront and admin for a boutique brand, built around a composable CMS with edge-cached product pages.",
-    tech: ["Remix", "Stripe", "Sanity", "Postgres"],
-    image: projectEcom,
-  },
-  {
-    year: "2024",
-    title: "Northline analytics",
-    desc: "A calm analytics dashboard for a logistics team — real-time fleet metrics, weekly digests, and forecast overlays.",
-    tech: ["React", "FastAPI", "Timescale", "D3"],
+    title: "AI Study Planner",
+    desc: "A personalized study planner that generates adaptive schedules from a learner's goals, subjects, and available time, powered by lightweight ML heuristics.",
+    tech: ["Python", "Machine Learning", "React"],
     image: projectAnalytics,
+    link: GITHUB,
+  },
+  {
+    title: "OTT Platform UI",
+    desc: "A responsive streaming-platform interface with browsing, categories, and detail views — focused on smooth interactions and clean visual hierarchy.",
+    tech: ["React", "HTML", "CSS", "JavaScript"],
+    image: projectEcom,
+    link: GITHUB,
+  },
+  {
+    title: "Movie Genre Classification",
+    desc: "A text classification model that predicts a movie's genre from its plot summary using classical NLP features and supervised learning.",
+    tech: ["Python", "Machine Learning", "Data Science"],
+    image: projectAi,
+    link: GITHUB,
+  },
+  {
+    title: "Customer Churn Prediction",
+    desc: "An end-to-end ML pipeline that predicts customer churn from behavioral and account data, with feature analysis to explain the key drivers.",
+    tech: ["Python", "Machine Learning", "SQL"],
+    image: projectAnalytics,
+    link: GITHUB,
+  },
+  {
+    title: "Credit Card Fraud Detection",
+    desc: "An imbalanced-classification model that flags fraudulent transactions in real time, tuned for high recall on the minority fraud class.",
+    tech: ["Python", "Machine Learning", "Data Science"],
+    image: projectAi,
+    link: GITHUB,
+  },
+  {
+    title: "Personal Portfolio Website",
+    desc: "This portfolio — a calm, editorial single-page site built to showcase my work as an AI & Full Stack developer.",
+    tech: ["React", "TypeScript", "HTML", "CSS"],
+    image: projectEcom,
+    link: GITHUB,
   },
 ];
 
@@ -80,7 +118,7 @@ function Nav() {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-10">
         <a href="#top" className="font-display text-base font-semibold tracking-tight">
-          Aarav<span className="text-primary">.</span>
+          Karthik<span className="text-primary">.</span>
         </a>
         <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
           {NAV.map((n) => (
@@ -106,7 +144,7 @@ function Hero() {
       <div className="md:col-span-8 fade-up">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
           <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-          Available for select projects — Q3 2026
+          Open to internships &amp; freelance projects
         </div>
         <h1 className="font-display text-5xl font-medium leading-[1.02] tracking-tight sm:text-6xl md:text-7xl">
           Building thoughtful{" "}
@@ -115,9 +153,9 @@ function Hero() {
           with a bias for craft.
         </h1>
         <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          I'm Aarav — a freelance AI &amp; full stack developer. I partner with founders
-          and small teams to design, ship, and refine calm, production-grade web
-          products. No frameworks-for-frameworks-sake. No dashboards nobody opens.
+          I'm Karthik CS — an AI &amp; Full Stack Developer. I build practical
+          machine-learning tools and clean, responsive web products, from data
+          pipelines and models to the interfaces people actually use.
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-4">
           <a
@@ -142,15 +180,15 @@ function Hero() {
           <ul className="mt-4 space-y-3 text-sm">
             <li className="flex justify-between gap-4">
               <span className="text-muted-foreground">Focus</span>
-              <span className="text-right font-medium">RAG products &amp; agent tooling</span>
+              <span className="text-right font-medium">AI, ML &amp; full stack web</span>
             </li>
             <li className="flex justify-between gap-4">
-              <span className="text-muted-foreground">Based in</span>
-              <span className="font-medium">Bengaluru, IN</span>
+              <span className="text-muted-foreground">Studying</span>
+              <span className="text-right font-medium">B.Tech AI &amp; Data Science</span>
             </li>
             <li className="flex justify-between gap-4">
-              <span className="text-muted-foreground">Booking</span>
-              <span className="font-medium text-primary">2 slots open</span>
+              <span className="text-muted-foreground">Status</span>
+              <span className="font-medium text-primary">Available</span>
             </li>
           </ul>
           <span className="hand-divider mt-6" />
@@ -182,22 +220,31 @@ function About() {
       <div className="grid gap-12 md:grid-cols-12">
         <div className="md:col-span-7 space-y-5 text-lg leading-relaxed text-foreground/85">
           <p>
-            I've spent the last six years building web products — first inside a
-            product studio in Bengaluru, then independently. My work sits at the
-            intersection of applied AI and pragmatic engineering: retrieval systems,
-            internal tools, and small, opinionated interfaces.
+            I'm Karthik CS, an AI &amp; Full Stack Developer who enjoys turning
+            ideas into working products. My interest sits at the meeting point of
+            applied machine learning and clean web engineering — from training
+            models on real-world data to shipping the interfaces around them.
           </p>
           <p>
-            I studied Computer Science at BITS Pilani, where I got a little too
-            interested in compilers. These days I'm most useful in the messy first
-            weeks of a project — turning a rough brief into something concrete you
-            can ship and learn from.
+            I'm currently pursuing a B.Tech in Artificial Intelligence and Data
+            Science at KPR Institute of Engineering and Technology. Alongside
+            coursework I build side projects across AI, data, and full stack web
+            to sharpen both the craft and the fundamentals.
           </p>
         </div>
         <div className="md:col-span-5 space-y-6">
-          <FactRow k="Education" v="B.E. Computer Science — BITS Pilani, 2019" />
-          <FactRow k="Experience" v="6+ years, product + platform engineering" />
-          <FactRow k="Objective" v="Long-term collaborations with teams who value craft over churn." />
+          <FactRow
+            k="Education"
+            v="B.Tech in Artificial Intelligence and Data Science — KPR Institute of Engineering and Technology"
+          />
+          <FactRow
+            k="Focus"
+            v="AI / ML, data science, and full stack web development"
+          />
+          <FactRow
+            k="Objective"
+            v="To grow as an engineer by building useful, well-crafted products and collaborating with teams that care about quality."
+          />
         </div>
       </div>
     </section>
@@ -267,7 +314,7 @@ function Work() {
             </figure>
             <div className="md:col-span-5">
               <div className="font-mono text-xs tracking-widest text-muted-foreground">
-                {p.year} — Case study
+                Project
               </div>
               <h3 className="mt-3 font-display text-2xl font-medium tracking-tight sm:text-3xl">
                 {p.title}
@@ -283,6 +330,15 @@ function Work() {
                   </li>
                 ))}
               </ul>
+              <a
+                href={p.link}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-5 inline-flex items-center gap-1.5 text-sm text-foreground underline decoration-primary decoration-2 underline-offset-4 hover:text-primary"
+              >
+                View on GitHub
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
             </div>
           </article>
         ))}
@@ -292,11 +348,11 @@ function Work() {
 }
 
 function Contact() {
-  const items = [
-    { icon: Mail, label: "aarav@mehta.studio", href: "mailto:aarav@mehta.studio" },
-    { icon: Github, label: "github.com/aaravmehta", href: "https://github.com" },
-    { icon: Linkedin, label: "linkedin.com/in/aaravmehta", href: "https://linkedin.com" },
-    { icon: MapPin, label: "Bengaluru, India" },
+  const items: { icon: typeof Mail; label: string; href?: string }[] = [
+    { icon: Mail, label: EMAIL, href: `mailto:${EMAIL}` },
+    { icon: Github, label: "github.com/Karthik-CS07", href: GITHUB },
+    { icon: Linkedin, label: "linkedin.com/in/karthik-cs-89b629327", href: LINKEDIN },
+    { icon: MapPin, label: "India" },
   ];
   return (
     <section id="contact" className="border-t border-border/60 py-24">
@@ -336,6 +392,7 @@ function Inquiry() {
     const title = String(data.get("title") || "").trim();
     const desc = String(data.get("desc") || "").trim();
     const budget = String(data.get("budget") || "").trim();
+    const deadline = String(data.get("deadline") || "").trim();
 
     if (!name || name.length > 100) return toast.error("Please enter a valid name.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
@@ -344,10 +401,26 @@ function Inquiry() {
     if (!desc || desc.length > 2000) return toast.error("Please describe the project.");
     if (!budget) return toast.error("Please pick an expected budget.");
 
-    // Frontend-only — replace with an email service integration later.
+    // Frontend-only handoff: open the user's email client addressed to Karthik.
+    const subject = `New project inquiry — ${title}`;
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Budget: ${budget}`,
+      deadline ? `Deadline: ${deadline}` : null,
+      "",
+      "Project description:",
+      desc,
+    ]
+      .filter(Boolean)
+      .join("\n");
+    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(body)}`;
+
     setSubmitted(true);
     form.reset();
-    toast.success("Thanks — I'll be in touch within two business days.");
+    toast.success("Thanks — I'll be in touch soon.");
   }
 
   return (
@@ -357,13 +430,13 @@ function Inquiry() {
         <div className="md:col-span-5 space-y-4">
           <p className="font-serif text-xl italic leading-relaxed text-foreground/85">
             Tell me a little about what you're building. I read every message
-            personally and reply within two business days.
+            personally and reply as soon as I can.
           </p>
           <span className="hand-divider" />
           <p className="text-sm text-muted-foreground">
             Prefer email? Write to{" "}
-            <a href="mailto:aarav@mehta.studio" className="ink-underline text-foreground">
-              aarav@mehta.studio
+            <a href={`mailto:${EMAIL}`} className="ink-underline text-foreground">
+              {EMAIL}
             </a>
             .
           </p>
@@ -375,10 +448,10 @@ function Inquiry() {
               <span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground">
                 <Check className="h-4 w-4" />
               </span>
-              <h3 className="font-display text-2xl">Message received.</h3>
+              <h3 className="font-display text-2xl">Message ready to send.</h3>
               <p className="text-foreground/80">
-                Thanks for the note — I'll get back to you shortly. In the meantime,
-                feel free to browse the recent work above.
+                Your email client should have opened with the details filled in.
+                If not, please email me directly at {EMAIL}.
               </p>
               <button
                 onClick={() => setSubmitted(false)}
@@ -415,10 +488,10 @@ function Inquiry() {
                     className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary"
                   >
                     <option value="" disabled>Select a range</option>
-                    <option>Under $5k</option>
-                    <option>$5k – $15k</option>
-                    <option>$15k – $40k</option>
-                    <option>$40k+</option>
+                    <option>Under $500</option>
+                    <option>$500 – $2k</option>
+                    <option>$2k – $5k</option>
+                    <option>$5k+</option>
                   </select>
                 </div>
                 <Field label="Deadline (optional)" name="deadline" type="date" />
@@ -482,11 +555,11 @@ function Footer() {
   return (
     <footer className="border-t border-border/60 py-10">
       <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:px-10">
-        <p>© {new Date().getFullYear()} Aarav Mehta. Handcrafted in Bengaluru.</p>
+        <p>© {new Date().getFullYear()} Karthik CS. All rights reserved.</p>
         <div className="flex items-center gap-5">
-          <a href="mailto:aarav@mehta.studio" className="hover:text-foreground">Email</a>
-          <a href="https://github.com" className="hover:text-foreground">GitHub</a>
-          <a href="https://linkedin.com" className="hover:text-foreground">LinkedIn</a>
+          <a href={`mailto:${EMAIL}`} className="hover:text-foreground">Email</a>
+          <a href={GITHUB} target="_blank" rel="noreferrer" className="hover:text-foreground">GitHub</a>
+          <a href={LINKEDIN} target="_blank" rel="noreferrer" className="hover:text-foreground">LinkedIn</a>
         </div>
       </div>
     </footer>
