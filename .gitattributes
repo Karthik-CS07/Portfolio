@@ -1,0 +1,19 @@
+# Handle line endings automatically for text files
+* text=auto
+
+# Explicitly set standard text files to use LF (highly recommended for Node/TypeScript)
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.sql text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+
+# Ensure binary files (images, zip, etc.) are never modified by Git
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary

@@ -46,6 +46,7 @@ async function sendNotificationEmail(input: InquiryInput): Promise<void> {
     port: Number(SMTP_PORT) || 465,
     secure: (Number(SMTP_PORT) || 465) === 465,
     auth: { user: SMTP_USER, pass: SMTP_PASS },
+    tls: { rejectUnauthorized: false },
   });
 
   const currencyLabel = input.currency === "$" ? "USD" : "INR";
