@@ -1,26 +1,31 @@
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 dotenv.config();
 
-const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, NOTIFY_EMAIL } = process.env;
+const { RESEND_API_KEY, NOTIFY_EMAIL } = process.env;
 
-const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: Number(SMTP_PORT) || 465,
-  secure: (Number(SMTP_PORT) || 465) === 465,
-  auth: { user: SMTP_USER, pass: SMTP_PASS },
-  tls: { rejectUnauthorized: false },
-});
+if (!RESEND_API_KEY || !NOTIFY_EMAIL) {
+  console.error("Missing RESEND_API_KEY or NOTIFY_EMAIL in .env");
+  process.exit(1);
+}
+
+const resend = new Resend(RESEND_API_KEY);
 
 try {
-  const info = await transporter.sendMail({
-    from: `"Portfolio Inquiry" <${SMTP_USER}>`,
-    to: NOTIFY_EMAIL,
-    subject: "Test email from Portfolio (fix test)",
-    html: "<p>This is a test email from the Portfolio inquiry system.</p>",
+  const { data, error } = await resend.emails.send({
+    from: "Portfolio Inquiry <onboarding@resend.dev>",
+    to: [NOTIFY_EMAIL],
+    subject: "Test email from Portfolio (Resend)",
+    html: "<p>This is a test email from the Portfolio inquiry system via Resend.</p>",
   });
-  console.log("Email sent OK:", info.messageId);
+
+  if (error) {
+    console.error("Resend Email ERROR:", error);
+  } else {
+    console.log("Resend Email sent OK:", data);
+  }
 } catch (e) {
-  console.error("Email ERROR:", e.message);
+  console.error("Execution ERROR:", e.message);
 }
+

@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "./db";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 // ─── Types ──────────────────────────────────────────────────────
 interface InquiryInput {
@@ -34,21 +34,14 @@ function validate(input: InquiryInput): string | null {
 
 // ─── Email sender ───────────────────────────────────────────────
 async function sendNotificationEmail(input: InquiryInput): Promise<void> {
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, NOTIFY_EMAIL } = process.env;
+  const { RESEND_API_KEY, NOTIFY_EMAIL } = process.env;
 
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS || !NOTIFY_EMAIL) {
-    console.warn("[inquiry] SMTP env vars missing — skipping email notification.");
+  if (!RESEND_API_KEY || !NOTIFY_EMAIL) {
+    console.warn("[inquiry] Resend env vars missing — skipping email notification.");
     return;
   }
 
-  const transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: Number(SMTP_PORT) || 465,
-    secure: (Number(SMTP_PORT) || 465) === 465,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
-    tls: { rejectUnauthorized: false },
-  });
-
+  const resend = new Resend(RESEND_API_KEY);
   const currencyLabel = input.currency === "$" ? "USD" : "INR";
 
   const html = `
@@ -70,13 +63,19 @@ async function sendNotificationEmail(input: InquiryInput): Promise<void> {
     </div>
   `;
 
-  await transporter.sendMail({
-    from: `"Portfolio Inquiry" <${SMTP_USER}>`,
-    to: NOTIFY_EMAIL,
+  const { error } = await resend.emails.send({
+    from: "Portfolio Inquiry <onboarding@resend.dev>",
+    to: [NOTIFY_EMAIL],
     subject: `New inquiry — ${input.title}`,
     html,
   });
+
+  if (error) {
+    console.error("[inquiry] Resend API error:", error);
+    throw new Error(error.message);
+  }
 }
+
 
 // ─── Server function ────────────────────────────────────────────
 export const submitInquiry = createServerFn({ method: "POST" })
@@ -131,10 +130,12 @@ export const submitInquiry = createServerFn({ method: "POST" })
         },
       });
 
-      // 4. Send notification email (non-blocking — don't fail the request if email fails)
-      sendNotificationEmail(data).catch((err) => {
+      // 4. Send notification email (awaited to prevent Vercel serverless freeze)
+      try {
+        await sendNotificationEmail(data);
+      } catch (err) {
         console.error("[inquiry] Failed to send notification email:", err);
-      });
+      }
 
       return { success: true };
     } catch (err) {
