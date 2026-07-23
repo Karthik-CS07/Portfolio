@@ -2,8 +2,10 @@ import dotenv from "dotenv";
 import path from "path";
 import { neonConfig } from "@neondatabase/serverless";
 import { PrismaNeon } from "@prisma/adapter-neon";
-import { PrismaClient } from "@prisma/client";
+import prismaClientPkg from "@prisma/client";
 import ws from "ws";
+
+const { PrismaClient } = prismaClientPkg;
 
 // ─── Load .env explicitly ───────────────────────────────────────
 // Vite's SSR module system does not automatically load .env for
@@ -37,9 +39,28 @@ function createPrismaClient(): PrismaClient {
   return new PrismaClient({ adapter });
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+// Use a Proxy for lazy initialization to prevent database client creation
+// during build-time / static compilation where DATABASE_URL is not available.
+let prismaInstance: PrismaClient | undefined;
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+function getPrisma(): PrismaClient {
+  if (!prismaInstance) {
+    prismaInstance = globalForPrisma.prisma ?? createPrismaClient();
+    if (process.env.NODE_ENV !== "production") {
+      globalForPrisma.prisma = prismaInstance;
+    }
+  }
+  return prismaInstance;
 }
+
+export const prisma = new Proxy({} as PrismaClient, {
+  get(target, prop, receiver) {
+    const client = getPrisma();
+    const value = Reflect.get(client, prop, receiver);
+    if (typeof value === "function") {
+      return value.bind(client);
+    }
+    return value;
+  },
+});
 
