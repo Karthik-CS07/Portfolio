@@ -4,12 +4,11 @@ import { t as require_main } from "../_libs/dotenv.mjs";
 import { n as ce } from "../_libs/neondatabase__serverless.mjs";
 import { t as PrismaNeonAdapterFactory } from "../_libs/@prisma/adapter-neon+[...].mjs";
 import { t as wrapper_default } from "../_libs/ws.mjs";
-import { t as require_nodemailer } from "../_libs/nodemailer.mjs";
+import { t as Resend } from "../_libs/resend+standardwebhooks.mjs";
 import path from "path";
 import prismaClientPkg from "@prisma/client";
-//#region node_modules/.nitro/vite/services/ssr/assets/inquiry-DnrfYE0A.js
+//#region node_modules/.nitro/vite/services/ssr/assets/inquiry-Dr03MNjx.js
 var import_main = /* @__PURE__ */ __toESM(require_main());
-var import_nodemailer = /* @__PURE__ */ __toESM(require_nodemailer());
 var createServerRpc = (serverFnMeta, splitImportFn) => {
 	const url = "/_serverFn/" + serverFnMeta.id;
 	return Object.assign(splitImportFn, {
@@ -51,21 +50,12 @@ function validate(input) {
 	return null;
 }
 async function sendNotificationEmail(input) {
-	const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, NOTIFY_EMAIL } = process.env;
-	if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS || !NOTIFY_EMAIL) {
-		console.warn("[inquiry] SMTP env vars missing — skipping email notification.");
+	const { RESEND_API_KEY, NOTIFY_EMAIL } = process.env;
+	if (!RESEND_API_KEY || !NOTIFY_EMAIL) {
+		console.warn("[inquiry] Resend env vars missing — skipping email notification.");
 		return;
 	}
-	const transporter = import_nodemailer.default.createTransport({
-		host: SMTP_HOST,
-		port: Number(SMTP_PORT) || 465,
-		secure: (Number(SMTP_PORT) || 465) === 465,
-		auth: {
-			user: SMTP_USER,
-			pass: SMTP_PASS
-		},
-		tls: { rejectUnauthorized: false }
-	});
+	const resend = new Resend(RESEND_API_KEY);
 	const currencyLabel = input.currency === "$" ? "USD" : "INR";
 	const html = `
     <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -85,12 +75,16 @@ async function sendNotificationEmail(input) {
       </div>
     </div>
   `;
-	await transporter.sendMail({
-		from: `"Portfolio Inquiry" <${SMTP_USER}>`,
-		to: NOTIFY_EMAIL,
+	const { error } = await resend.emails.send({
+		from: "Portfolio Inquiry <onboarding@resend.dev>",
+		to: [NOTIFY_EMAIL],
 		subject: `New inquiry — ${input.title}`,
 		html
 	});
+	if (error) {
+		console.error("[inquiry] Resend API error:", error);
+		throw new Error(error.message);
+	}
 }
 var submitInquiry_createServerFn_handler = createServerRpc({
 	id: "e6ba7e0004e7dc7106d6f0c5a4d10c4f820a29232c7716f1e06463f241904f6e",
@@ -133,9 +127,11 @@ var submitInquiry = createServerFn({ method: "POST" }).validator((data) => {
 			currency: data.currency,
 			deadline: data.deadline || null
 		} });
-		sendNotificationEmail(data).catch((err) => {
+		try {
+			await sendNotificationEmail(data);
+		} catch (err) {
 			console.error("[inquiry] Failed to send notification email:", err);
-		});
+		}
 		return { success: true };
 	} catch (err) {
 		console.error("[inquiry] Server error:", err);

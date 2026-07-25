@@ -15,7 +15,7 @@ export default defineConfig({
   nitro: {
     preset: "vercel",
     externals: {
-      external: [
+      inline: [
         "@prisma/client",
         ".prisma/client",
         "@prisma/adapter-neon",
