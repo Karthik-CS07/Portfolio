@@ -16,6 +16,8 @@ export default defineConfig({
     ssr: {
       noExternal: [
         "@prisma/client",
+        "@prisma/client-runtime-utils",
+        ".prisma/client",
         "@prisma/adapter-neon",
         "@neondatabase/serverless"
       ]
@@ -26,6 +28,7 @@ export default defineConfig({
     externals: {
       inline: [
         "@prisma/client",
+        "@prisma/client-runtime-utils",
         ".prisma/client",
         "@prisma/adapter-neon",
         "@neondatabase/serverless",
