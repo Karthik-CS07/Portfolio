@@ -12,6 +12,15 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    ssr: {
+      noExternal: [
+        "@prisma/client",
+        "@prisma/adapter-neon",
+        "@neondatabase/serverless"
+      ]
+    }
+  },
   nitro: {
     preset: "vercel",
     externals: {

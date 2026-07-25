@@ -2,10 +2,8 @@ import dotenv from "dotenv";
 import path from "path";
 import { neonConfig } from "@neondatabase/serverless";
 import { PrismaNeon } from "@prisma/adapter-neon";
-import prismaClientPkg from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import ws from "ws";
-
-const { PrismaClient } = prismaClientPkg;
 
 // ─── Load .env explicitly ───────────────────────────────────────
 // Vite's SSR module system does not automatically load .env for
